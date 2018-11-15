@@ -36,12 +36,22 @@
  
  #### 对象
  OpenGL 的对象是指一些选项的集合，代表OpenGL状态的一个子集，可以把对象看成一个C风格的结构体
+ 
  工作流：
  - 创建对象，用一个id保存其引用  glGenObject(1,&objectID)
  - 将对象绑定到上下文的目标位置  glBingObject(GL_WINDOW_TARGET, objectID)
  - 接着设置对象中的选项         glSetObjectOption(GL_WINDOW_TARGET, GL_OPTION_WINDOW_WIDTH, 800)
  - 重新绑定目标位置为默认0的时候，选项就会生效 glBingObject(GL_WINDOW_TARGET, 0)
  
+ ### 创建窗体
+ 在使用OpenGL之前，需要创建一个显示的窗口和OpenGL上下文(context),这两个在不同的操作系统下都是不一样的，OpenGL有目的的将这些操作剥离，这样就
+ 要求我们自己来完成这部分工作，幸运的是，有几个比较流行的库已经帮我们完成了这部分工作
+ * GLFW 专门针对OpenGL的C语言库 (http://www.glfw.org/download.html) 只需要其生成的库和头文件即可
+ * FreeGLUT
+ 
+ #### GLAD 
+ 由于OpenGL只是一个规范，具体的实现是由驱动开发商针对具体的显卡实现的，由于其驱动实在是太多了，大多数函数的位置无法再编译时确定下来，需要在运行时候
+ 查询，所以开发者需要在运行时获取函数的地址并保存在一个函数指针中使用，GLAD就是来帮助我们查找函数地址的工具，其使用一个[在线服务](http://glad.dav1d.de/)
  
   
 
