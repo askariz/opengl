@@ -48,13 +48,33 @@
  要求我们自己来完成这部分工作，幸运的是，有几个比较流行的库已经帮我们完成了这部分工作
  * GLFW 专门针对OpenGL的C语言库 (http://www.glfw.org/download.html) 只需要其生成的库和头文件即可
  * FreeGLUT
+ * GLAD 由于OpenGL只是一个规范，具体的实现是由驱动开发商针对具体的显卡实现的，由于其驱动实在是太多了，大多数函数的位置无法再编译时确定下来，需要在运行时候
+   查询，所以开发者需要在运行时获取函数的地址并保存在一个函数指针中使用，GLAD就是来帮助我们查找函数地址的工具，其使用一个[在线服务](http://glad.dav1d.de/)
+         
+
+首先需要初始glfwInit()，其次在glfw我们要使用的OpenGL版本号与渲染模式，可以通过glfwWindowHint()暗示函数来告诉glfw
+````
+glfwInit()
+glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR 3);
+glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR_3);
+glfwWindowHint(GLFW_OPENGL_PROFILE,GLFW_OPENGL_CORE_PROFILE);
+
+// 创建窗体
+GLFWwindow *window = glCreateWindow(800,600,"LearnOpenGL",flase);
+ ````
  
- #### GLAD 
- 由于OpenGL只是一个规范，具体的实现是由驱动开发商针对具体的显卡实现的，由于其驱动实在是太多了，大多数函数的位置无法再编译时确定下来，需要在运行时候
- 查询，所以开发者需要在运行时获取函数的地址并保存在一个函数指针中使用，GLAD就是来帮助我们查找函数地址的工具，其使用一个[在线服务](http://glad.dav1d.de/)
+ #### glViewport 
+ 在开始渲染之前，需要告诉OpenGL要渲染window窗口大小，这里可以使用glViewport(0,0,800,600)函数,前两个参数是屏幕坐标左下角的坐标，后面两个参数代表窗口的宽和高
+ 这样在OpenGL坐标中，就可以将比如(-0.5 0.5)转为屏幕坐标(200,450)了.
+ Note:这里需要注意,通常屏幕坐标在左下角是(0,0)，但是当我们在表示放置窗口的位置的时候,左上角一般为(0,0)
+ 
  
  ### 使用Cmake 创建一个最基本的OpenGL程序
- 依赖 $sudo apt-get install libglm-dev libglfw-dev 
+ ````
+ 依赖安装 
+ linux : $ sudo apt-get install libglm-dev libglfw-dev 
+ mac: $ brew install glm glfw
+ ````
  * GLFW3  一般在/usr/lib/x86_64-linux-gnu/libglfw.so.3
  * GLM OpenGL数学头文件库,只由头文件组成,一般位于/usr/include下
  
@@ -155,4 +175,4 @@ glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
  ````
  
- 
+### 
