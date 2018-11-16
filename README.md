@@ -155,4 +155,28 @@ glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
  ````
  
+ ### 变化 Transformation 
+ 
+ - 标量向量 scalar vector 加减乘除
+ - 向量点积v¯⋅k¯=||v¯||⋅||k¯||⋅cosθ
+ - 向量叉积
+ 
+ [参考地址](https://learnopengl.com/Getting-started/Transformations)
+ 
+ ### 坐标系统
+ OpenGL 希望每个顶点都是可见都在(-1,1)之间,在次之外都是不可见的,通常对象的顶点坐标都是经过多次变换之后才到屏幕的2D坐标
+ - local space 也叫对象坐标
+ - world space 世界坐标
+ - view space  视图坐标
+ - clip space 
+ - screen space 屏幕坐标
+ 
+ ![坐标](resources/images/coordinate_systems.png)
+ 
+ 其中有几个比较重要的转换矩阵
+ - model matrix 
+ - view matrix  
+ - projection matrix (view space -> clip space即将坐标归一到-1,1,该变换决定试图中哪些部分是可见的哪些市不可见的)
+ 
+ 
  
