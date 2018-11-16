@@ -53,6 +53,93 @@
  由于OpenGL只是一个规范，具体的实现是由驱动开发商针对具体的显卡实现的，由于其驱动实在是太多了，大多数函数的位置无法再编译时确定下来，需要在运行时候
  查询，所以开发者需要在运行时获取函数的地址并保存在一个函数指针中使用，GLAD就是来帮助我们查找函数地址的工具，其使用一个[在线服务](http://glad.dav1d.de/)
  
-  
+ ### GLSL 着色器语言shader
+ 着色器语言是独立的GPU小程序,语言风格和C类似
+ 
+ 顶点着色器
+ ````
+ 
+#version 330 core
+layout (location = 0) in vec3 aPos;
+layout (location = 1) in vec3 aColor;
+layout (location = 2) in vec2 aTexCoord;
 
+out vec3 ourColor;
+out vec2 TexCoord;
+
+void main()
+{
+    gl_Position = vec4(aPos, 1.0);
+    ourColor = aColor;
+    TexCoord = aTexCoord;
+}
+ ````
+ 片段着色器
+ ````
+ #version 330 core
+ out vec4 FragColor;
+   
+ in vec3 ourColor;
+ in vec2 TexCoord;
+ 
+ uniform sampler2D ourTexture;
+ 
+ void main()
+ {
+     FragColor = texture(ourTexture, TexCoord);
+ }
+ ````
+ * attribute: 通过layout (location = 0) 来将CPU数据传到到GPU,每次绘制的时候都需要传递该属性
+ * uniform：也用于CPU将数据传递到GPU,与attribute稍微不同的是,uniform是全局的,只要设置一次就会一直保持
+ 
+ ### 纹理 texture
+ 每一个顶点都要有同一个对应的纹理坐标,纹理坐标如下![image](resources/images/tex_coords.png)
+ 左下角(0,0),右上角(1,1),纹理的填充形式(wrapper)有几种:
+ * GL_REPEAT 默认的纹理填充形式
+ * GL_MIRRORED_REPEAT 镜像重复填充
+ * GL_CLAMP_TO_EDGE 这个不是很能理解
+ * GL_CLAMP_TO_BOARDER 这种对应就是显示框比较大,纹理比较小的情况,多余的地方直接填充用户制定和的颜色
+ 
+ #### 纹理滤波 filter 
+ 用来告诉OpenGL纹理的颜色有两种：
+ * GL_NEAREST 纹理坐标所在的颜色
+ * GL_LINEAR 纹理坐标周围的颜色的插值
+ 
+ #### Mipmaps
+ 根据到viewer之间的距离来,远端的贴图是近端的二分之一,这样不断的重复下去
+ 
+ #### 创建纹理
+ ````
+ 1. glGenTextures(1,&textureID) 生成纹理对象object
+ 2. glBindTexture(GL_TEXTURE_2D, textureID) 绑定纹理对象到OpenGL纹理的上下文(context 状态机)
+ 3. glTexImage2D() 根据图像数据生成上下文
+ 4. glGenerateMipmap(GL_TEXTURE_2D) 生成mipmap对象
+ 5. 生成完成后就可以开始绘制了，注意绘制完成后要删除glDeleteTexture(1,textureID)来释放内存
+ 6. 使用着色器绘制纹理,片段fragment shader是如何回去上面创建的纹理对象的,OpenGL提供了一个内置的方法叫sampler2D
+    并使用了texture方法来确定纹理的颜色
+ 7. 如何叠加多层纹理texture units,默认激活的纹理层为0
+ 
+片段找色器
+#version 330 core
+...
+
+uniform sampler2D texture1;
+uniform sampler2D texture2;
+
+void main()
+{
+    FragColor = mix(texture(texture1, TexCoord), texture(texture2, TexCoord), 0.2);
+}
+
+绘制
+glActiveTexture(GL_TEXTURE0);
+glBindTexture(GL_TEXTURE_2D, texture1);
+glActiveTexture(GL_TEXTURE1);
+glBindTexture(GL_TEXTURE_2D, texture2);
+
+glBindVertexArray(VAO);
+glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0); 
+
+ ````
+ 
  
