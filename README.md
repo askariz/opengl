@@ -53,6 +53,19 @@
  由于OpenGL只是一个规范，具体的实现是由驱动开发商针对具体的显卡实现的，由于其驱动实在是太多了，大多数函数的位置无法再编译时确定下来，需要在运行时候
  查询，所以开发者需要在运行时获取函数的地址并保存在一个函数指针中使用，GLAD就是来帮助我们查找函数地址的工具，其使用一个[在线服务](http://glad.dav1d.de/)
  
+ ### 使用Cmake 创建一个最基本的OpenGL程序
+ 依赖 $sudo apt-get install libglm-dev libglfw-dev 
+ * GLFW3  一般在/usr/lib/x86_64-linux-gnu/libglfw.so.3
+ * GLM OpenGL数学头文件库,只由头文件组成,一般位于/usr/include下
+ 
+ 使用cmake的find_package()函数 QUIET找不到包的时候继续执行 REQUIRED找不到就不继续往下执行,并报错.
+ cmake 首先会在${CMAKE_MODULE_PATH}中查找.cmake文件,再ubuntu中/usr/share/cmake-3.5/Modules中提供了很多.cmake的文件来供我们使用
+ 如果没有则需要需要我们自己写.cmake文件,然后Include该文件后再执行find_package()
+ 
+ FIND_PATH(VAR xx.h search_path) 
+ FIND_LIBRARY(VAR xx.so search_path)
+ 
+ 
  ### GLSL 着色器语言shader
  着色器语言是独立的GPU小程序,语言风格和C类似
  
