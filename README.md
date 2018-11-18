@@ -178,5 +178,7 @@ glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
  - view matrix  
  - projection matrix (view space -> clip space即将坐标归一到-1,1,该变换决定试图中哪些部分是可见的哪些市不可见的)
  
- 
- 
+ ### 如何管理一个gui 
+ - widget
+ - layout 主要用于管理组内所有成员的位置和大小.所以再Layout中需要做setPosition,setSize等函数
+ - theme
